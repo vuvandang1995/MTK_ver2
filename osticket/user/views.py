@@ -463,3 +463,4 @@ def submitadmin(request):
         else:
             return render(request, 'user/submit_code_admin.html', {'mess': mess_code_error})
     return render(request, 'user/submit_code_admin.html', {'mess': mess})
+

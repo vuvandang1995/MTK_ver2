@@ -1,8 +1,10 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from cryptography.fernet import Fernet
+# from cryptography.fernet import Fernet
+from api.serializers import *
 from user.models import *
 
-# Create your views here.
+Create your views here.
 def tk_create(request):
     if request.method == 'POST':
         try:
@@ -27,3 +29,9 @@ def tk_create(request):
             pass
     return redirect('/')
 
+
+def list_topic(request):
+    if request.method == 'GET':
+        topics = Topics.objects.all()
+        serializer = TopicsSerializer(topics, many=True)
+        return JsonResponse(serializer.data, safe=False)
