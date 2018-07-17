@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>create ticket</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2>Modal Example</h2>
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+        <!-- Modal content-->
+        <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">New ticket</h4>
+                </div>
+                <div class="modal-body">
+                    {% csrf_token %}
+                    
+                    <input type="hidden" name="auth_token" value="fdef47f359958311d9d31d08626b42106b5d989ec8e024ab" required>
+
+                    <label for="title"><b>Title</b></label>
+                    <input class="form-control" type="text" placeholder="Enter title" name="title" required>
+
+                    <br /><label for="topic"><b>Topic</b></label><br />
+                    <select name="topic" class="form-control" id="mySelect">
+                        {% for tp in list_topic %}
+                            <option value="{{tp.id}}" name="{{tp.name}}">{{tp.name}} - {{tp.description}}</option>
+                        {% endfor %}
+                    </select>
+                    <br />
+                    <label for="content"><b>Content</b></label><br /><br />
+                    <input class="form-control" type="text" placeholder="Enter Content" name="content" required>
+
+                    <br />
+                    <label for="attach"><b>Attach</b></label><br />
+                    <input type="file" class="form-control" accept="image/*" name="attach" id="attach">
+                    <div><font id="invalid-msg" color="red" size="5"></font></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" value="OK" id="i_submit" onsubmit="return validateSize()">Send</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+        
+            </div>
+    </div>
+  
+  </div>
+</div>
+
+
+<script>
+    $("#i_submit").click(function() {
+        var token = $("input[name=csrfmiddlewaretoken]").val();
+        var title = $("input[name=title]").val();
+        var content = $("input[name=content]").val();
+        var topic = document.getElementById("mySelect").value;
+        var auth_token = $("input[name=auth_token]").val();
+        $.ajax({
+            type:'POST',
+            url: location.href,
+            data: {'title': title, 'content': content, 'csrfmiddlewaretoken':token, 'topic': topic, 'auth_token': auth_token},
+            success: function(){
+                window.location.reload();
+            }
+        });
+    });
+</script>
+</body>
+</html>
