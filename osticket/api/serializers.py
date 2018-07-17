@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from user.models import *
 
-
+# Tạo class theo REST cho model Topics
 class TopicsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topics

@@ -99,6 +99,7 @@ def homeuser(request):
                     'noti_chat': user.noti_chat
                    }
         if request.method == 'POST':
+            # user close ticket
             if 'tkid' in request.POST:
                 ticket = Tickets.objects.get(id=request.POST['tkid'])
                 ticket.status = 3
@@ -122,12 +123,14 @@ def homeuser(request):
                                                                   {'receiver': rc, 'sender': user, 'id': id}),
                                                  to=[rc.email],)
                             email.send()
+            # user xem thông báo
             elif 'noti_noti' in request.POST:
                 user.noti_noti = 0
                 user.save()
             elif 'noti_chat' in request.POST:
                 user.noti_chat = 0
                 user.save()
+            # user post info tạo ticket
             else:
                 form = CreateNewTicketForm(request.POST,request.FILES)
                 if form.is_valid():
@@ -170,6 +173,7 @@ def homeuser(request):
         return redirect("/")
 
 
+# Hàm trả về table các ticket của user
 def user_data(request):
     if request.session.has_key('user') and (Users.objects.get(username=request.session['user'])).status == 1:
         user = Users.objects.get(username=request.session['user'])
@@ -204,9 +208,10 @@ def user_data(request):
             data.append([id, tk.topicid.name, tk.title, status, handler, option])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
+        # trả về chuỗi json để phía client có thể GET và show ra
         return JsonResponse(tickets, safe=False)
 
-
+# User upload ảnh đính kèm
 def handle_uploaded_file(f):
     # path = settings.MEDIA_ROOT+"/photos/"+f.name
     path = "media/photos/" + f.name
@@ -216,6 +221,7 @@ def handle_uploaded_file(f):
     file.close()
 
 
+# Profile User (chỉnh sửa thông tin, password)
 def detail_user(request):
     if request.session.has_key('user')and (Users.objects.get(username=request.session['user'])).status == 1:
         user = Users.objects.get(username=request.session['user'])
@@ -391,7 +397,7 @@ def logout_user(request):
     del request.session['user']
     return redirect("/")
 
-
+# Hàm active tài khoản cho User
 def activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
@@ -406,6 +412,7 @@ def activate(request, uidb64, token):
         return HttpResponse('Activation link is invalid!')
 
 
+# Hàm reset password cho User
 def resetpwd(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
@@ -446,7 +453,7 @@ def agresetpwd(request, uidb64, token):
     else:
         return HttpResponse('Activation link is invalid!')
 
-
+# Hàm xác thực code cho master-admin
 def submitadmin(request):
     mess = 'Please confirm your email address to complete the login admin'
     mess_code_error = 'Code is incorrect'

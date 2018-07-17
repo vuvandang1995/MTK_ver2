@@ -8,8 +8,11 @@ import fileinput
 from datetime import datetime
 from datetime import timedelta
 
+# websocket sử lý phần chat
 class ChatConsumer(WebsocketConsumer):
+    # hàm kết nối socket với client
     def connect(self):
+        # GET thông tin từ url
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
         
@@ -19,6 +22,7 @@ class ChatConsumer(WebsocketConsumer):
             self.channel_name
         )
         self.accept()
+        # sau khi connect, gửi lại thông báo đã được lưu trước ở file .txt
         try:
             f = r'notification/chat/'+self.room_group_name+'.txt'
             file = open(f,'r')
@@ -51,6 +55,7 @@ class ChatConsumer(WebsocketConsumer):
         who = text_data_json['who']
         time = text_data_json['time']
 
+        # lưu lịch sử chat
         f = r'notification/chat/'+self.room_group_name+'.txt'
         file = open(f,'a')
         file.write(message + "^%$^%$&^"+ who +"^%$^%$&^"+ time + "\n") 

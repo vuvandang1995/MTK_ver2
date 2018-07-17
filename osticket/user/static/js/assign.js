@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    // Agent nhận xử lý ticket, gửi message websocket tới User và Group Agent để load lại trang, update dữ liệu
     $('[data-toggle="tooltip"]').tooltip();
     $("body").on('click', '.assign_ticket', function(){
         var id = $(this).attr('id');

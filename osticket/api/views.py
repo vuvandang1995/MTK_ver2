@@ -1,10 +1,13 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-# from cryptography.fernet import Fernet
+from django.views.decorators.csrf import csrf_exempt
 from api.serializers import *
 from user.models import *
+from user.forms import *
+from user.views import handle_uploaded_file
 
-Create your views here.
+@csrf_exempt
+# Hàm cho phép tạo ticket qua API
 def tk_create(request):
     if request.method == 'POST':
         try:
@@ -30,6 +33,7 @@ def tk_create(request):
     return redirect('/')
 
 
+# hàm cho phép get Topic qua API
 def list_topic(request):
     if request.method == 'GET':
         topics = Topics.objects.all()

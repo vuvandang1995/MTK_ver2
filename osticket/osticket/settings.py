@@ -27,12 +27,19 @@ SECRET_KEY = 'mc14247v#36l=$+gtg@p9nk!3yoi5_z%n*kf9b1ueepb5njwca'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
+# Đồng ý cho các host bên ngoài có thể GET, POST, PULL DELETE api
+CORS_ORIGIN_ALLOW_ALL = True
+
+CSRF_COOKIE_SECURE = True
+
 ASGI_APPLICATION = 'osticket.routing.application'
 
 # Application definition
 
 INSTALLED_APPS = [
     'channels',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,6 +52,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -89,6 +98,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'osticket.wsgi.application'
+
+# Connect redis server
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',

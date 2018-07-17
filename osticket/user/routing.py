@@ -4,6 +4,7 @@ from django.conf.urls import url
 from . import consumers
 from agent import views
 
+# các url kết nối websocket
 websocket_urlpatterns = [
     url(r'^ws/(?P<room_name>[^/]+)/$', consumers.ChatConsumer),
     url(r'^ws/user/(?P<username>[^/]+)/$', consumers.UserConsumer),
